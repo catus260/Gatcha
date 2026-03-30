@@ -307,7 +307,6 @@
             line-height: 1.4;
         }
 
-        /* 💡 천장 관련 CSS 복구 및 수정 */
         .pity-row {
             margin-bottom: 15px;
         }
@@ -340,7 +339,6 @@
             transition: width 0.3s ease;
         }
 
-        /* 천장 보상 버튼 디자인 */
         .pity-claim-btn {
             background: var(--primary-red);
             color: white;
@@ -449,6 +447,16 @@
             overflow: hidden;
         }
 
+        .card-slot.unlocked {
+            background: #252535;
+            cursor: pointer;
+        }
+
+        .card-slot.unlocked:hover {
+            transform: translateY(-5px);
+            border-color: #555;
+        }
+
         .card-slot.locked {
             color: #444;
         }
@@ -472,10 +480,6 @@
         .card-slot .card-info .rarity {
             font-weight: bold;
             margin-bottom: 2px;
-        }
-
-        .card-slot.unlocked {
-            background: #252535;
         }
 
         .card-img {
@@ -576,17 +580,9 @@
             cursor: pointer;
         }
 
-        .flip-card-inner:active {
-            transform: scale(0.95);
-        }
-
         .flip-card-inner.is-flipped {
             transform: rotateY(180deg);
             cursor: default;
-        }
-
-        .flip-card-inner.is-flipped:active {
-            transform: rotateY(180deg);
         }
 
         .flip-card-front,
@@ -662,6 +658,27 @@
             margin-bottom: 15px;
         }
 
+        /* 도감 상세보기 모달 스타일 */
+        .detail-card-img {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .detail-rarity {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .detail-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
         .new-badge {
             position: absolute;
             top: -8px;
@@ -692,7 +709,6 @@
             }
         }
 
-        /* 닉네임 입력 전용 */
         .nickname-input {
             width: 80%;
             padding: 12px;
@@ -706,7 +722,6 @@
             outline: none;
         }
 
-        /* 도움말 텍스트 */
         .help-text {
             text-align: left;
             font-size: 0.9rem;
@@ -735,7 +750,7 @@
                 <div class="stat-label">🎫 티켓</div>
             </div>
             <div class="stat-box">
-                <div class="stat-value" id="val-collection">0/15</div>
+                <div class="stat-value" id="val-collection">0/16</div>
                 <div class="stat-label">도감</div>
             </div>
             <div class="stat-box">
@@ -745,9 +760,9 @@
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('attendance')">출석 & 미션</button>
-            <button class="tab-btn" onclick="switchTab('gacha')">🎁 뽑기</button>
-            <button class="tab-btn" onclick="switchTab('collection')">도감</button>
+            <button class="tab-btn active" onclick="switchTab('attendance', this)">출석 & 미션</button>
+            <button class="tab-btn" onclick="switchTab('gacha', this)">🎁 뽑기</button>
+            <button class="tab-btn" onclick="switchTab('collection', this)">도감</button>
         </div>
 
         <div id="tab-attendance" class="tab-content active">
@@ -755,7 +770,7 @@
                 <h3 class="panel-title">⏱️ 1분마다 티켓 획득</h3>
                 <p style="font-size: 0.8rem; color: var(--text-sub); text-align: left; margin:0 0 15px 0;">게임에 접속해 있는 동안
                     1분마다 티켓 2장을 드립니다!</p>
-                <button id="btn-5min" class="btn-large" onclick="claim1MinTicket()">티켓 받기 (01:00)</button>
+                <button id="btn-5min" class="btn-large" onclick="claim5MinTicket()">티켓 받기 (01:00)</button>
             </div>
 
             <div class="panel">
@@ -793,13 +808,13 @@
         <div id="tab-gacha" class="tab-content">
             <div class="panel">
                 <div class="rates-title">✨ 친구 콜렉션 확률</div>
-                <div class="rates-sub">콜렉션 15개를 모두 모아보세요!</div>
+                <div class="rates-sub">콜렉션 16개를 모두 모아보세요!</div>
                 <div class="rates-grid">
                     <span style="color: var(--color-legendary)">전설 2%</span>
-                    <span style="color: var(--color-epic)">에픽 5%</span>
-                    <span style="color: var(--color-unique)">유니크 각 4%</span>
-                    <span style="color: var(--color-rare)">레어 각 10%</span>
-                    <span style="color: var(--color-normal)">노멀 총 55%</span>
+                    <span style="color: var(--color-epic)">에픽 6%</span>
+                    <span style="color: var(--color-unique)">유니크 12%</span>
+                    <span style="color: var(--color-rare)">레어 30%</span>
+                    <span style="color: var(--color-normal)">노멀 50%</span>
                 </div>
             </div>
 
@@ -855,7 +870,7 @@
             <div class="panel">
                 <div class="progress-header">
                     <span>컬렉션 진행도</span>
-                    <span id="col-progress-txt">0 / 15</span>
+                    <span id="col-progress-txt">0 / 16</span>
                 </div>
                 <div class="progress-bar-bg" style="margin-bottom: 20px;">
                     <div class="progress-bar-fill" id="col-progress-bar"></div>
@@ -873,8 +888,9 @@
                 <p><strong>[1] 티켓 얻는 법</strong><br>매일 접속하여 출석하거나, 게임을 켜둔 채로 1분을 기다리면 티켓을 얻을 수 있습니다.</p>
                 <p><strong>[2] 뽑기 및 천장 시스템</strong><br>모은 티켓으로 친구 카드를 수집하세요. 뽑기를 할 때마다 게이지가 차오르며, 게이지가 가득 차면 직접 버튼을 눌러
                     확정 보상을 획득할 수 있습니다.</p>
+                <p><strong>[3] 도감 상세 보기</strong><br>도감에서 이미 획득한 카드를 클릭하면 크게 볼 수 있습니다.</p>
             </div>
-            <button class="modal-close" style="background: var(--primary-red);"
+            <button class="modal-action-btn" style="background: var(--primary-red);"
                 onclick="closeModal('help-modal')">닫기</button>
         </div>
     </div>
@@ -883,8 +899,7 @@
         <div class="modal-content">
             <div class="modal-title">환영합니다!</div>
             <input type="text" id="nickname-input" class="nickname-input" placeholder="닉네임 (최대 10자)" maxlength="10">
-            <button class="modal-close" style="background: var(--primary-red);"
-                onclick="registerNickname()">시작하기</button>
+            <button class="modal-action-btn" onclick="registerNickname()">시작하기</button>
         </div>
     </div>
 
@@ -896,30 +911,41 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="detail-modal">
+        <div class="modal-content" style="max-width: 350px;">
+            <div id="detail-content">
+            </div>
+            <button class="modal-action-btn" onclick="closeModal('detail-modal')">닫기</button>
+        </div>
+    </div>
+
     <script>
         const cards = [
             // 노말
-            { id: 'n1', name: "고립된 최도영", rarity: "노멀", chance: 19, color: 'var(--color-normal)', image: './images/[1]normal/n1.jpeg' },
-            { id: 'n2', name: "모밀", rarity: "노멀", chance: 19, color: 'var(--color-normal)', image: './images/[1]normal/n2.jpeg' },
-            { id: 'n3', name: "함바그", rarity: "노멀", chance: 18, color: 'var(--color-normal)', image: './images/[1]normal/n3.jpeg' },
-            { id: 'n4', name: "기흉련", rarity: "노멀", chance: 18, color: 'var(--color-normal)', image: './images/[1]normal/n4.jpeg' },
-            { id: 'n5', name: "직업반 최진서", rarity: "노멀", chance: 19, color: 'var(--color-normal)', image: './images/[1]normal/n5.jpeg' },
-            { id: 'n6', name: "중성화전 최도영", rarity: "노멀", chance: 19, color: 'var(--color-normal)', image: './images/[1]normal/n6.jpeg' },
+            { id: 'n1', name: "고립된 최도영", rarity: "노멀", color: 'var(--color-normal)', image: './images/[1]normal/n1.jpeg' },
+            { id: 'n2', name: "모밀", rarity: "노멀", color: 'var(--color-normal)', image: './images/[1]normal/n2.jpeg' },
+            { id: 'n3', name: "함바그", rarity: "노멀", color: 'var(--color-normal)', image: './images/[1]normal/n3.jpeg' },
+            { id: 'n4', name: "기흉련", rarity: "노멀", color: 'var(--color-normal)', image: './images/[1]normal/n4.jpeg' },
+            { id: 'n5', name: "직업반 최진서", rarity: "노멀", color: 'var(--color-normal)', image: './images/[1]normal/n5.jpeg' },
+            { id: 'n6', name: "중성화전 최도영", rarity: "노멀", color: 'var(--color-normal)', image: './images/[1]normal/n6.jpeg' },
             // 레어
-            { id: 'r1', name: "박격포 마스터", rarity: "레어", chance: 10, color: 'var(--color-rare)', image: './images/[2]rare/r1.jpeg' },
-            { id: 'r2', name: "병신과 머저리", rarity: "레어", chance: 10, color: 'var(--color-rare)', image: './images/[2]rare/r2.jpeg' },
-            { id: 'r3', name: "탐켄치", rarity: "레어", chance: 10, color: 'var(--color-rare)', image: './images/[2]rare/r3.jpeg' },
-            { id: 'r4', name: "리즈 허준석", rarity: "레어", chance: 10, color: 'var(--color-rare)', image: './images/[2]rare/r4.jpeg' },
+            { id: 'r1', name: "박격포 마스터", rarity: "레어", color: 'var(--color-rare)', image: './images/[2]rare/r1.jpeg' },
+            { id: 'r2', name: "병신과 머저리", rarity: "레어", color: 'var(--color-rare)', image: './images/[2]rare/r2.jpeg' },
+            { id: 'r3', name: "탐켄치", rarity: "레어", color: 'var(--color-rare)', image: './images/[2]rare/r3.jpeg' },
+            { id: 'r4', name: "리즈 허준석", rarity: "레어", color: 'var(--color-rare)', image: './images/[2]rare/r4.jpeg' },
             // 유니크
-            { id: 'u1', name: "박하민의 핵망치", rarity: "유니크", chance: 4, color: 'var(--color-unique)', image: './images/[3]Unique/u1.png' },
-            { id: 'u2', name: "허준석의 람각", rarity: "유니크", chance: 4, color: 'var(--color-unique)', image: './images/[3]Unique/u2.jpeg' },
-            { id: 'u3', name: "상남 2인조", rarity: "유니크", chance: 4, color: 'var(--color-unique)', image: './images/[3]Unique/u3.jpeg' },
+            { id: 'u1', name: "박하민의 핵망치", rarity: "유니크", color: 'var(--color-unique)', image: './images/[3]Unique/u1.jpeg' },
+            { id: 'u2', name: "허준석의 람각", rarity: "유니크", color: 'var(--color-unique)', image: './images/[3]Unique/u2.jpeg' },
+            { id: 'u3', name: "상남 2인조", rarity: "유니크", color: 'var(--color-unique)', image: './images/[3]Unique/u3.jpeg' },
             // 에픽
-            { id: 'e1', name: "개안한 최진서", rarity: "에픽", chance: 5, color: 'var(--color-epic)', image: './images/[4]Epic/e1.jpeg' },
-            { id: 'e2', name: "인어준석과 조개진서", rarity: "에픽", chance: 5, color: 'var(--color-epic)', image: './images/[4]Epic/e2.png' },
+            { id: 'e1', name: "개안한 최진서", rarity: "에픽", color: 'var(--color-epic)', image: './images/[4]Epic/e1.jpeg' },
+            { id: 'e2', name: "인어준석과 조개진서", rarity: "에픽", color: 'var(--color-epic)', image: './images/[4]Epic/e2.png' },
             // 전설
-            { id: 'l1', name: "진토르", rarity: "전설", chance: 2, color: 'var(--color-legendary)', image: './images/[5]Legendary/l1.png' }
+            { id: 'l1', name: "진토르", rarity: "전설", color: 'var(--color-legendary)', image: './images/[5]Legendary/l1.png' }
         ];
+
+        // 💡 등급별 확률 수정 적용
+        const rarityChances = { "전설": 2, "에픽": 6, "유니크": 12, "레어": 30, "노멀": 50 };
 
         let userData = JSON.parse(localStorage.getItem('myGachaGame_v2')) || {};
 
@@ -991,7 +1017,6 @@
         function updatePityUI(type, currentVal, maxVal, color) {
             const wrap = document.getElementById(`pity-wrap-${type}`);
             const barFill = document.getElementById(`bar-pity-${type}`);
-
             let displayVal = currentVal > maxVal ? maxVal : currentVal;
             barFill.style.width = `${(displayVal / maxVal) * 100}%`;
 
@@ -1002,11 +1027,11 @@
             }
         }
 
-        function switchTab(tabName) {
+        function switchTab(tabName, clickedBtn) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`tab-${tabName}`).classList.add('active');
-            event.target.classList.add('active');
+            if (clickedBtn) clickedBtn.classList.add('active');
         }
 
         function startTimer() {
@@ -1029,7 +1054,7 @@
             }
         }
 
-        function claim1MinTicket() {
+        function claim5MinTicket() {
             if (Date.now() < userData.nextTicketTime) return;
             userData.tickets += 2;
             userData.nextTicketTime = Date.now() + (1 * 60 * 1000);
@@ -1045,16 +1070,13 @@
         function registerFriendCode() {
             const inputCode = document.getElementById('friend-code-input').value.trim().toUpperCase();
             const today = new Date().toDateString();
-
             if (!inputCode) return alert("친구 코드를 입력해주세요.");
             if (inputCode === userData.myCode) return alert("본인의 코드는 입력할 수 없습니다.");
-
             if (userData.lastCodeDate !== today) {
                 userData.usedCodesToday = [];
                 userData.lastCodeDate = today;
             }
             if (userData.usedCodesToday.includes(inputCode)) return alert("오늘 이미 등록한 친구의 코드입니다. 내일 다시 시도해주세요.");
-
             userData.usedCodesToday.push(inputCode);
             userData.tickets += 1;
             save();
@@ -1065,19 +1087,16 @@
         function checkAttendance() {
             const today = new Date().toDateString();
             const btnAttend = document.getElementById('btn-attend');
-
             if (userData.lastAttend === today) {
                 btnAttend.innerText = "오늘 출석 완료";
                 btnAttend.disabled = true;
                 return;
             }
-
             btnAttend.onclick = () => {
                 const yesterday = new Date();
                 yesterday.setDate(yesterday.getDate() - 1);
                 if (userData.lastAttend === yesterday.toDateString()) userData.streak += 1;
                 else userData.streak = 1;
-
                 let givenTickets = (userData.streak === 1) ? 3 : (userData.streak === 2) ? 5 : 10;
                 userData.tickets += givenTickets;
                 userData.lastAttend = today;
@@ -1093,35 +1112,26 @@
         function performDraw(times) {
             if (userData.tickets < times) return alert("티켓이 부족합니다!");
             userData.tickets -= times;
-
             let drawnCards = [];
-
             for (let i = 0; i < times; i++) {
                 if (userData.pityLegendary < 50) userData.pityLegendary++;
                 if (userData.pityEpic < 20) userData.pityEpic++;
-
-                let picked;
-
-                let totalChance = cards.reduce((sum, card) => sum + card.chance, 0);
-                const rand = Math.random() * totalChance;
+                let pickedRarity;
+                const rand = Math.random() * 100;
                 let acc = 0;
-                for (const card of cards) {
-                    acc += card.chance;
-                    if (rand <= acc) {
-                        picked = card;
-                        break;
-                    }
+                for (const [rarity, chance] of Object.entries(rarityChances)) {
+                    acc += chance;
+                    if (rand <= acc) { pickedRarity = rarity; break; }
                 }
-
+                const possibleCards = cards.filter(c => c.rarity === pickedRarity);
+                const picked = possibleCards[Math.floor(Math.random() * possibleCards.length)];
                 let isNewCard = false;
                 if (!userData.inventory.includes(picked.id)) {
                     isNewCard = true;
                     userData.inventory.push(picked.id);
                 }
-
                 drawnCards.push({ ...picked, isNew: isNewCard });
             }
-
             save();
             document.getElementById('result-modal-title').innerText = "✨ 뽑기 결과 ✨";
             showResultModal(drawnCards);
@@ -1129,21 +1139,16 @@
 
         function claimPityReward(type) {
             let rewardRarity = type === 'legendary' ? '전설' : '에픽';
-
             let possibleCards = cards.filter(c => c.rarity === rewardRarity);
             let picked = possibleCards[Math.floor(Math.random() * possibleCards.length)];
-
             let isNewCard = false;
             if (!userData.inventory.includes(picked.id)) {
                 isNewCard = true;
                 userData.inventory.push(picked.id);
             }
-
             if (type === 'legendary') userData.pityLegendary = 0;
             if (type === 'epic') userData.pityEpic = 0;
-
             save();
-
             document.getElementById('result-modal-title').innerText = `🎉 ${rewardRarity} 확정 보상! 🎉`;
             showResultModal([{ ...picked, isNew: isNewCard }]);
         }
@@ -1151,22 +1156,17 @@
         function showResultModal(cardsList) {
             const grid = document.getElementById('result-grid');
             grid.innerHTML = '';
-
             const isSinglePull = cardsList.length === 1;
             unflippedCount = cardsList.length;
-
             cardsList.forEach(card => {
                 const newTagHtml = card.isNew ? '<div class="new-badge">NEW!</div>' : '';
-
                 const flipCard = document.createElement('div');
                 flipCard.className = `flip-card ${isSinglePull ? 'single-pull' : ''}`;
-
                 flipCard.innerHTML = `
                     <div class="flip-card-inner" onclick="flipThisCard(this)">
                         <div class="flip-card-front">
                             FRIEND<br><span style="font-size: ${isSinglePull ? '1.2rem' : '0.7rem'}; color: #ffd700;">PACK</span>
                         </div>
-                        
                         <div class="flip-card-back" style="border-color: ${card.color}">
                             ${newTagHtml}
                             <div class="rarity-txt" style="color:${card.color};">[${card.rarity}]</div>
@@ -1177,14 +1177,12 @@
                 `;
                 grid.appendChild(flipCard);
             });
-
             updateResultBtn();
             openModal('result-modal');
         }
 
         function flipThisCard(element) {
             if (element.classList.contains('is-flipped')) return;
-
             element.classList.add('is-flipped');
             unflippedCount--;
             updateResultBtn();
@@ -1216,36 +1214,44 @@
         function renderCollection() {
             const grid = document.getElementById('collection-grid');
             grid.innerHTML = '';
-
             cards.forEach(card => {
                 const isUnlocked = userData.inventory.includes(card.id);
                 const slot = document.createElement('div');
                 slot.className = `card-slot ${isUnlocked ? 'unlocked' : 'locked'}`;
-
                 if (isUnlocked) {
                     slot.style.borderColor = card.color;
                     slot.innerHTML = `
-                    <img src="${card.image}" class="card-img" onerror="this.src='https://via.placeholder.com/100x100/252535/ffffff?text=Img'">
-                    <div class="card-info" style="color: ${card.color};">
-                        <div class="rarity">${card.name}</div>
-                    </div>
-                `;
+                        <img src="${card.image}" class="card-img" onerror="this.src='https://via.placeholder.com/100x100/252535/ffffff?text=Img'">
+                        <div class="card-info" style="color: ${card.color};">
+                            <div class="rarity">${card.name}</div>
+                        </div>
+                    `;
+                    slot.onclick = () => showCardDetail(card);
                 } else {
                     slot.innerHTML = `
-                    <div class="q-mark">?</div>
-                    <div class="card-info">
-                        <div class="rarity" style="color: ${card.color}">${card.rarity}</div>
-                        <div>???</div>
-                    </div>
-                `;
+                        <div class="q-mark">?</div>
+                        <div class="card-info">
+                            <div class="rarity" style="color: ${card.color}">${card.rarity}</div>
+                            <div>???</div>
+                        </div>
+                    `;
                 }
                 grid.appendChild(slot);
             });
         }
 
+        function showCardDetail(card) {
+            const content = document.getElementById('detail-content');
+            content.innerHTML = `
+                <div class="detail-rarity" style="color: ${card.color};">[${card.rarity}]</div>
+                <img src="${card.image}" class="detail-card-img" onerror="this.src='https://via.placeholder.com/250x250/1a1a24/ffffff?text=?'">
+                <div class="detail-name">${card.name}</div>
+            `;
+            openModal('detail-modal');
+        }
+
         checkNickname();
     </script>
-
 </body>
 
 </html>
