@@ -944,7 +944,6 @@
             { id: 'l1', name: "진토르", rarity: "전설", color: 'var(--color-legendary)', image: './images/[5]Legendary/l1.png' }
         ];
 
-        // 💡 등급별 확률 수정 적용
         const rarityChances = { "전설": 2, "에픽": 6, "유니크": 12, "레어": 30, "노멀": 50 };
 
         let userData = JSON.parse(localStorage.getItem('myGachaGame_v2')) || {};
@@ -1137,10 +1136,25 @@
             showResultModal(drawnCards);
         }
 
+        // 💡 획득하지 않은 카드를 우선 지급하는 로직 추가
         function claimPityReward(type) {
             let rewardRarity = type === 'legendary' ? '전설' : '에픽';
-            let possibleCards = cards.filter(c => c.rarity === rewardRarity);
-            let picked = possibleCards[Math.floor(Math.random() * possibleCards.length)];
+
+            // 1. 해당 등급의 전체 카드 목록
+            let allCardsInRarity = cards.filter(c => c.rarity === rewardRarity);
+
+            // 2. 해당 등급 중 아직 획득하지 않은 카드 목록 필터링
+            let unownedCards = allCardsInRarity.filter(c => !userData.inventory.includes(c.id));
+
+            let picked;
+
+            // 3. 미획득 카드가 있다면 그 중에서 랜덤 선택, 없다면 전체 중 랜덤 선택
+            if (unownedCards.length > 0) {
+                picked = unownedCards[Math.floor(Math.random() * unownedCards.length)];
+            } else {
+                picked = allCardsInRarity[Math.floor(Math.random() * allCardsInRarity.length)];
+            }
+
             let isNewCard = false;
             if (!userData.inventory.includes(picked.id)) {
                 isNewCard = true;
